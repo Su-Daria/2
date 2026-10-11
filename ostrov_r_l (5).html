@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c3447">
+<title>Остров Р и Л — логопедическое приключение</title>
+<style>
+  :root{
+    --night:#0a2535;--deep:#103c4c;--sea:#166b79;--teal:#43c6bd;--mint:#a3f2d6;
+    --gold:#ffd36b;--gold2:#ffa83d;--coral:#ff806d;--cream:#fff8e9;--ink:#153744;
+    --panel:rgba(255,250,236,.96);--muted:#5b7a82;--shadow:0 22px 55px rgba(3,23,34,.25);
+  }
+  *{box-sizing:border-box}
+  html{min-height:100%;background:var(--night)}
+  body{margin:0;min-height:100vh;color:#fff;font-family:ui-rounded,"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif;background:
+      radial-gradient(ellipse at 14% 12%,rgba(55,177,173,.22),transparent 34%),
+      radial-gradient(ellipse at 88% 20%,rgba(255,195,98,.15),transparent 28%),
+      linear-gradient(155deg,#082432 0%,#104a5c 52%,#0a303e 100%);overflow-x:hidden}
+  body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;background-image:radial-gradient(#d8fff5 1px,transparent 1.5px),radial-gradient(#ffe3a0 1px,transparent 1.5px);background-size:83px 83px,127px 127px;background-position:13px 15px,47px 63px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+  button{font:inherit;cursor:pointer;border:0}
+  button:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffdd83;outline-offset:4px}
+  .shell{width:min(1440px,100%);margin:auto;padding:18px clamp(14px,3vw,42px) 36px;position:relative}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;min-width:240px}
+  .brand-mark{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#ffe9a4,#ffb74e);box-shadow:inset 0 3px 0 rgba(255,255,255,.7),0 8px 22px #061b28aa;transform:rotate(-5deg);font-size:28px}
+  .brand-title{font-weight:1000;letter-spacing:.07em;font-size:clamp(17px,2vw,24px);line-height:1.05;text-transform:uppercase;text-shadow:0 3px 0 #0a2b37}
+  .brand-sub{font-size:11px;font-weight:800;letter-spacing:.18em;color:#a6e7dd;margin-top:6px;text-transform:uppercase}
+  .hud{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hud-pill{display:flex;align-items:center;gap:8px;background:rgba(3,26,39,.5);border:1px solid rgba(201,255,242,.16);border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800;color:#fff8df;box-shadow:inset 0 1px 0 #ffffff12}
+  .hud-pill strong{color:var(--gold);font-size:15px}
+  .icon-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;color:#fff;background:#ffffff12;border:1px solid #ffffff24;font-size:18px;transition:.2s}
+  .icon-btn:hover{background:#ffffff22;transform:translateY(-2px)}
+  .screen{display:none;animation:fadeIn .35s ease both}.screen.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(18px,3vw,42px);align-items:center;padding:clamp(22px,4vw,52px);background:linear-gradient(135deg,rgba(22,96,110,.88),rgba(10,53,70,.86));border:1px solid rgba(205,255,238,.18);border-radius:34px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;width:380px;height:380px;right:-130px;top:-210px;border-radius:50%;background:radial-gradient(circle,#ffe18a28,transparent 70%);pointer-events:none}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#082f3db0;border:1px solid #91f1d744;color:#a9f4dc;font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+  h1,h2,h3,p{margin-top:0}
+  .hero h1{font-size:clamp(35px,5vw,66px);line-height:.98;letter-spacing:-.045em;margin:20px 0 17px;font-weight:1000;text-shadow:0 5px 0 #092e3b,0 10px 25px #031c27a0}
+  .hero h1 span{color:var(--gold);white-space:nowrap}
+  .hero-copy{max-width:620px;color:#dcf8ee;font-size:clamp(14px,1.4vw,17px);line-height:1.7;margin-bottom:23px}
+  .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .primary-btn,.secondary-btn{padding:14px 22px;border-radius:16px;font-size:14px;font-weight:950;letter-spacing:.02em;transition:transform .18s,filter .18s,box-shadow .18s}
+  .primary-btn{color:#4e3510;background:linear-gradient(180deg,#ffe998 0%,#ffc657 55%,#ffb33c 100%);box-shadow:inset 0 2px 0 #fff9d6,0 7px 0 #b7762f,0 14px 24px #051f2b60}
+  .primary-btn:hover{transform:translateY(-2px);filter:brightness(1.04)}.primary-btn:active{transform:translateY(3px);box-shadow:inset 0 2px 0 #fff9d6,0 3px 0 #b7762f}
+  .secondary-btn{color:#edfff8;background:#ffffff12;border:1px solid #d9fff52a}
+  .secondary-btn:hover{background:#ffffff20;transform:translateY(-2px)}
+  .hero-art{position:relative;min-height:280px;display:grid;place-items:center;isolation:isolate}
+  .sun-disc{position:absolute;right:10%;top:3%;width:110px;height:110px;border-radius:50%;background:linear-gradient(145deg,#fff5a8,#ffb34c);box-shadow:0 0 55px #ffd16b65;z-index:-2}
+  .island{position:absolute;bottom:11%;width:min(410px,95%);height:130px;border-radius:50%;background:linear-gradient(180deg,#7ddc9b,#1e966f 72%,#0d5e57);box-shadow:inset 0 12px 0 #bcf5b8,0 30px 30px #061c2b65;transform:rotate(-5deg);z-index:-1}
+  .island:before{content:"";position:absolute;inset:18px 33px 55px;border-radius:50%;background:linear-gradient(160deg,#76d792,#2ca77b);box-shadow:inset 0 -6px 0 #167660}
+  .palm{position:absolute;font-size:84px;filter:drop-shadow(0 12px 7px #092c2c66);top:7%;left:12%;transform:rotate(-9deg)}
+  .boat{position:absolute;bottom:10%;right:3%;font-size:74px;filter:drop-shadow(0 14px 9px #062c365e);transform:rotate(-7deg)}
+  .hero-friends{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:0;margin-top:-10px;filter:drop-shadow(0 18px 13px #07283569)}
+  .friend{width:150px;height:180px;display:grid;place-items:center;position:relative;font-size:122px;animation:bob 3.3s ease-in-out infinite;line-height:1}
+  .friend:nth-child(2){font-size:114px;animation-delay:-1.3s;transform:translateY(10px)}
+  @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -9px}}
+  .friend-label{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fff8e9;color:#164353;padding:6px 13px;border-radius:999px;font-size:11px;font-weight:1000;letter-spacing:.04em;box-shadow:0 4px 0 #c59d57}
+  .map-heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:30px 2px 15px;flex-wrap:wrap}
+  .map-heading h2{font-size:clamp(23px,3vw,32px);margin:0 0 4px;letter-spacing:-.025em}.map-heading p{font-size:13px;color:#b7dedb;margin:0}
+  .map{position:relative;border-radius:30px;padding:clamp(18px,3vw,34px);background:linear-gradient(160deg,#e8f7d8,#aee5cb 55%,#6cc7bc);box-shadow:inset 0 3px 0 #ffffffa3,0 18px 35px #031f2d60;overflow:hidden;color:var(--ink)}
+  .map:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 18% 30%,#ffffff7c,transparent 23%),radial-gradient(ellipse at 82% 70%,#ffffff68,transparent 25%),radial-gradient(#2d9f804a 1px,transparent 1.8px);background-size:auto,auto,22px 22px;pointer-events:none}
+  .map-sea{position:absolute;inset:12% 9%;border:2px dashed #2eab9c70;border-radius:45% 53% 42% 58%;transform:rotate(-5deg);pointer-events:none}
+  .map-nodes{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;z-index:1}
+  .map-node{position:relative;text-align:left;min-height:184px;padding:15px;border-radius:22px;color:var(--ink);background:linear-gradient(150deg,#fffdf2,#fff2ce);box-shadow:0 7px 0 #99bdaa,0 12px 22px #225f5830,inset 0 2px 0 #fff;transition:transform .2s,filter .2s;overflow:hidden}
+  .map-node:hover:not(:disabled){transform:translateY(-5px) rotate(-.5deg);filter:brightness(1.02)}
+  .map-node:disabled{cursor:not-allowed;filter:grayscale(.68);opacity:.68}
+  .node-top{display:flex;align-items:center;justify-content:space-between;gap:5px}.node-num{font-weight:1000;font-size:11px;letter-spacing:.12em;color:#71908a}.node-status{font-size:15px}
+  .node-emoji{font-size:48px;display:block;margin:11px 0 10px;filter:drop-shadow(0 4px 2px #436a4530)}
+  .node-title{font-size:15px;font-weight:1000;display:block;margin-bottom:5px;line-height:1.2}.node-desc{font-size:11px;color:#6d8582;line-height:1.35;display:block}
+  .node-final{background:linear-gradient(150deg,#ffeda6,#ffc56e);box-shadow:0 7px 0 #c68a3b,0 12px 22px #225f5830,inset 0 2px 0 #fff}
+  .node-done{outline:3px solid #52bd8e;outline-offset:-5px}
+  .map-foot{position:relative;z-index:1;display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:24px;color:#386967;font-size:12px;font-weight:800;flex-wrap:wrap}
+  .progress-track{height:9px;background:#0f59602b;border-radius:999px;overflow:hidden;width:min(310px,100%);box-shadow:inset 0 2px 3px #104f4b1f}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#ffb641,#fff08d);border-radius:inherit;transition:width .4s ease}
+  .game-shell{border-radius:32px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);overflow:hidden}
+  .game-top{padding:clamp(16px,2.5vw,28px);background:linear-gradient(120deg,#f8e8b9,#fef7e7);border-bottom:1px solid #e5d6af;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .game-title-wrap{display:flex;align-items:center;gap:13px}.back-btn{width:44px;height:44px;flex:none;border-radius:14px;background:#174b59;color:#fff;font-size:21px;box-shadow:0 4px 0 #0c3443}.stage-kicker{font-size:10px;color:#a07832;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}.game-title{font-size:clamp(21px,3vw,29px);line-height:1.1;font-weight:1000;letter-spacing:-.03em;margin:0}.game-meta{display:flex;align-items:center;gap:8px}.meta-pill{padding:9px 12px;border-radius:999px;background:#fffdf4;border:1px solid #eadbb6;font-size:11px;font-weight:900;color:#896b38}
+  .scene{position:relative;min-height:115px;padding:18px clamp(16px,3vw,32px);background:linear-gradient(110deg,#c0f1e0,#b5e5e0 45%,#b5dce8);overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .scene:before{content:"";position:absolute;left:-8%;right:-8%;bottom:-75px;height:125px;border-radius:50%;background:linear-gradient(180deg,#79c98e,#3b9c79);box-shadow:0 -8px 0 #b4e7a8}
+  .scene:after{content:"";position:absolute;right:-3%;top:-44px;width:190px;height:140px;border-radius:50%;background:linear-gradient(150deg,#ffeaa0,#ffbf63);opacity:.8}
+  .scene-copy{position:relative;z-index:1;max-width:700px}.scene-copy p{color:#37666a;font-size:13px;font-weight:800;line-height:1.5;margin:0}.scene-emoji{position:relative;z-index:1;font-size:54px;filter:drop-shadow(0 7px 5px #34645b40);margin-right:20px}
+  .game-body{padding:clamp(17px,3vw,34px)}
+  .instruction-row{display:flex;justify-content:space-between;gap:15px;align-items:start;margin-bottom:22px;flex-wrap:wrap}.instruction{font-size:clamp(17px,2.4vw,23px);line-height:1.35;font-weight:1000;letter-spacing:-.02em;margin:0}.instruction small{font-size:13px;font-weight:650;color:#69828a;display:block;letter-spacing:0;margin-top:7px;line-height:1.5}.round-counter{padding:8px 12px;border-radius:999px;background:#e8f4ed;color:#407766;font-size:11px;font-weight:1000;white-space:nowrap}
+  .feedback{display:none;align-items:center;gap:10px;padding:12px 15px;border-radius:14px;font-size:13px;font-weight:850;margin:17px 0 0;line-height:1.5}.feedback.show{display:flex;animation:fadeIn .2s ease}.feedback.good{background:#dcf5e5;color:#276e4a;border:1px solid #b4e4c7}.feedback.try{background:#fff0d8;color:#875a1a;border:1px solid #f3d5a0}.feedback-icon{font-size:20px;flex:none}
+  .action-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px;flex-wrap:wrap}.action-hint{color:#7d9394;font-size:11px;font-weight:750;line-height:1.4}.action-buttons{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.small-btn{padding:11px 16px;border-radius:13px;background:#e8f1e9;color:#35645e;font-size:12px;font-weight:950;transition:.18s}.small-btn:hover{filter:brightness(.97);transform:translateY(-1px)}.small-btn:disabled{opacity:.45;cursor:not-allowed}.small-btn.primary{background:linear-gradient(180deg,#ffe28b,#ffc253);color:#593d13;box-shadow:0 4px 0 #cf973d}.small-btn.dark{background:#164b59;color:white;box-shadow:0 4px 0 #0d3540}
+  .sort-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.7fr);gap:18px;align-items:stretch}
+  /* Keep both sorting ships in one row so the second ship is not pushed below the visible area. */
+  .sort-lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch;min-width:0}
+  .sort-lanes .drop-area{min-width:0;min-height:0;padding:12px;gap:9px}
+  .sort-lanes .lane-l{margin-top:0!important}
+  .card-bank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-content:start}
+  .word-card{position:relative;min-width:0;min-height:108px;padding:11px 8px 9px;border-radius:18px;border:2px solid #e1e9dd;background:linear-gradient(160deg,#fff,#f6f7e9);color:#183e4a;box-shadow:0 4px 0 #d5e0d2,inset 0 1px 0 #fff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:transform .16s,border-color .16s,background .16s;user-select:none;touch-action:manipulation}
+  .word-card:hover{transform:translateY(-2px);border-color:#8fcbbb}.word-card.selected{border-color:#edaa3b;background:#fff3ce;box-shadow:0 4px 0 #e5bd6d,0 0 0 3px #f7d68c55}.word-card.correct{border-color:#55b982;background:#e1f7e9;box-shadow:0 4px 0 #a4d9b5}.word-card.wrong{border-color:#f28b79;background:#fff0eb;animation:shake .3s}
+  @keyframes shake{25%,75%{transform:translateX(-3px)}50%{transform:translateX(3px)}}
+  .word-emoji{font-size:clamp(28px,3vw,40px);line-height:1.05;filter:drop-shadow(0 2px 1px #17404c12)}.word-text{font-size:clamp(11px,1vw,14px);font-weight:1000;letter-spacing:.035em;text-transform:uppercase;overflow-wrap:anywhere}.card-small-action{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:#dcefe9;color:#30675d;font-size:12px;display:grid;place-items:center}
+  .drop-area{background:linear-gradient(145deg,#e5f7ed,#d6f0e8);border:2px dashed #83cbb4;border-radius:23px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:100%;transition:background .2s,border-color .2s}.drop-area.dragover{background:#c9f6e0;border-color:#389b7b}.drop-area.lane-l{background:linear-gradient(145deg,#e5f0fd,#dcebf7);border-color:#97bad9}.drop-area.lane-l.dragover{background:#cce3ff;border-color:#4b8cb8}
+  .lane-title{font-size:12px;font-weight:1000;color:#34765f;text-transform:uppercase;letter-spacing:.08em;display:flex;justify-content:space-between;gap:8px;align-items:center}.lane-l .lane-title{color:#3f6e9a}.lane-count{border-radius:999px;background:#ffffffb5;padding:4px 8px;font-size:10px}.lane-items{display:flex;gap:6px;flex-wrap:wrap;align-content:start;min-height:38px}.lane-chip{font-size:12px;font-weight:1000;letter-spacing:.05em;border-radius:10px;padding:7px 9px;background:#fff;color:#326b58;box-shadow:0 2px 0 #b8dfc9;cursor:pointer}.lane-l .lane-chip{color:#3d6b92;box-shadow:0 2px 0 #bfd5e7}.lane-empty{color:#7da79b;font-size:11px;line-height:1.4}
+  .dest-actions{display:flex;gap:8px;margin-top:auto}.dest-btn{flex:1;padding:11px 6px;border-radius:12px;background:#2d9b76;color:#fff;font-size:11px;font-weight:1000;box-shadow:0 4px 0 #1c7558;transition:.18s}.dest-btn:hover{transform:translateY(-2px)}.dest-btn.blue{background:#4e8eb7;box-shadow:0 4px 0 #32698e}
+  .choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.choice-card{min-height:150px}.choice-grid .word-card{min-height:142px}
+  .position-word{display:flex;align-items:center;justify-content:center;gap:22px;padding:20px;margin-bottom:18px;border-radius:24px;background:linear-gradient(130deg,#f7f2df,#e6f5e8);border:1px solid #d9e9d9}.position-art{font-size:70px;filter:drop-shadow(0 8px 5px #173b3c24)}.position-word-name{font-size:28px;font-weight:1000;letter-spacing:.08em;color:#164b59;text-transform:uppercase}.listen-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:12px;background:#d8ede5;color:#286254;font-size:11px;font-weight:950;margin-top:8px}
+  .position-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.position-btn{padding:18px 10px;border-radius:17px;border:2px solid #dfe9dd;background:linear-gradient(160deg,#fffdf4,#f3f5e8);color:#28525c;font-size:15px;font-weight:1000;box-shadow:0 5px 0 #dbe3d6;transition:.17s}.position-btn span{display:block;font-size:10px;color:#8ba09a;font-weight:800;margin-top:5px}.position-btn:hover{transform:translateY(-2px);border-color:#8fcbbb}.position-btn.selected{background:#fff0c9;border-color:#e8b44b}
+  .pair-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:740px;margin:0 auto}.pair-card{min-height:220px}.pair-card .word-emoji{font-size:clamp(55px,7vw,90px)}.pair-card .word-text{font-size:16px}.audio-prompt{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 18px;padding:13px 17px;border-radius:18px;background:#e9f4ec;max-width:440px;color:#335f57}.audio-prompt .speaker{width:46px;height:46px;border-radius:15px;background:#1d6970;color:white;font-size:21px;box-shadow:0 4px 0 #154e57}.audio-prompt strong{font-size:12px;display:block}.audio-prompt small{font-size:10px;color:#75918a;display:block;margin-top:3px}
+  .quiz-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.quiz-option{min-height:106px}.quiz-option .word-emoji{font-size:31px}.quiz-option .word-text{font-size:13px}.quiz-option.syllable-option{font-size:24px;letter-spacing:.05em;min-height:94px}
+  .finale{max-width:790px;margin:0 auto;text-align:center;padding:clamp(26px,5vw,60px) 18px}.finale-art{font-size:clamp(90px,15vw,160px);line-height:1;filter:drop-shadow(0 18px 9px #183e472c);animation:bob 3s ease-in-out infinite}.finale h2{font-size:clamp(29px,4vw,48px);letter-spacing:-.04em;margin:16px 0 11px;color:#184b57}.finale p{color:#66817f;line-height:1.7;font-size:14px;max-width:540px;margin:0 auto 23px}.award{display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border-radius:999px;background:#fff0c6;border:1px solid #efd18a;color:#84601d;font-size:12px;font-weight:1000;margin-bottom:23px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:13px 18px;border-radius:15px;background:#082e3d;color:#fff;font-weight:850;font-size:13px;box-shadow:0 12px 35px #0318227a;transition:.25s;z-index:20;max-width:calc(100vw - 28px);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+  .modal-backdrop{position:fixed;inset:0;background:#031a27b9;z-index:30;display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.modal{width:min(460px,100%);background:#fff8e9;color:#194351;border-radius:25px;padding:27px;box-shadow:0 25px 80px #0006}.modal h2{margin:0 0 10px;font-size:24px}.modal p{color:#67827f;font-size:13px;line-height:1.65}.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:20px}
+  .footer-note{text-align:center;color:#a9d4d0;font-size:10px;line-height:1.6;margin:25px auto 0;max-width:760px}
+  .script-error{position:relative;z-index:1000;margin:0 auto 14px;max-width:900px;padding:14px 16px;border-radius:14px;background:#fff0d8;color:#714b16;border:1px solid #f2cf8e;font-size:14px;line-height:1.5;font-weight:800}
+  .script-error[hidden]{display:none}
+  .no-script-message{margin:12px auto;padding:14px 16px;max-width:900px;border-radius:14px;background:#fff0d8;color:#714b16;border:1px solid #f2cf8e;font-size:14px;line-height:1.5;font-weight:800}
+  @media(max-width:1000px){.map-nodes{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:1fr .85fr}.sort-layout{grid-template-columns:1fr}.drop-area{min-height:125px}.dest-actions{margin-top:10px}}
+  @media(max-width:700px){.sort-lanes{gap:8px}.sort-lanes .drop-area{padding:9px;gap:8px;border-radius:17px}.sort-lanes .lane-title{font-size:10px;letter-spacing:.02em}.sort-lanes .lane-items{gap:5px;min-height:32px}.sort-lanes .lane-chip{font-size:10px;padding:6px 7px}.sort-lanes .dest-btn{font-size:10px;padding:9px 3px}.shell{padding:12px 12px 28px}.topbar{align-items:flex-start}.brand{min-width:0}.brand-mark{width:44px;height:44px;border-radius:14px;font-size:23px}.brand-title{font-size:16px}.brand-sub{font-size:9px}.hud{margin-left:auto}.hud-pill{padding:8px 10px;font-size:11px}.hud-pill strong{font-size:13px}.hero{grid-template-columns:1fr;padding:23px 20px 12px;gap:5px;border-radius:25px}.hero h1{font-size:42px;margin-top:16px}.hero-art{min-height:230px;order:2}.friend{width:120px;height:152px;font-size:100px}.friend:nth-child(2){font-size:92px}.palm{font-size:65px}.boat{font-size:57px}.sun-disc{width:85px;height:85px}.island{height:100px}.map-nodes{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.map-node{min-height:166px;padding:12px}.node-emoji{font-size:39px;margin:8px 0}.node-title{font-size:13px}.map{padding:15px;border-radius:23px}.map-foot{margin-top:18px}.scene{min-height:100px}.scene-emoji{font-size:42px;margin-right:0}.scene:after{width:120px}.game-shell{border-radius:23px}.game-top{padding:16px}.meta-pill{font-size:10px;padding:7px 9px}.game-body{padding:17px}.card-bank{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.word-card{min-height:94px;border-radius:14px;padding:9px 5px}.word-emoji{font-size:31px}.sort-layout{gap:13px}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.choice-grid .word-card{min-height:125px}.position-choices{gap:7px}.position-btn{padding:14px 4px;font-size:12px}.position-btn span{font-size:9px}.position-word{gap:12px;padding:15px}.position-art{font-size:54px}.position-word-name{font-size:23px}.pair-layout{gap:10px}.pair-card{min-height:174px}.pair-card .word-emoji{font-size:58px}.quiz-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.quiz-option{min-height:94px}.action-row{align-items:flex-start}.action-buttons{width:100%}.action-buttons button{flex:1}.hero-actions button{flex:1}.map-heading{margin-top:23px}}
+  @media(max-width:380px){.hud-pill:nth-child(2){display:none}.map-nodes{gap:8px}.map-node{min-height:156px}.card-bank{grid-template-columns:repeat(2,minmax(0,1fr))}.node-desc{font-size:10px}.brand-sub{letter-spacing:.1em}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+  /* Mobile/touch refinements: thumb-friendly controls, safe areas and no horizontal overflow. */
+  button,.word-card,.map-node,.lane-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .mobile-sort-dock{display:none}
+  @media(max-width:700px){
+    html,body{width:100%;max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+    .shell{padding:calc(10px + env(safe-area-inset-top)) 10px calc(22px + env(safe-area-inset-bottom));width:100%}
+    .topbar{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:13px}
+    .brand{width:100%;gap:10px}.brand-title{font-size:clamp(15px,4.3vw,18px)}.brand-sub{font-size:9px;letter-spacing:.08em}
+    .hud{display:flex;justify-content:flex-start;align-items:center;width:100%;gap:7px;margin:0}.hud-pill{min-height:40px;padding:8px 10px;font-size:11px}.icon-btn{width:44px;height:44px;flex:0 0 44px}
+    .hero{padding:21px 16px 10px;gap:0}.hero-copy{font-size:14px;line-height:1.55}.hero-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:13px}.hero-actions button{width:100%;min-height:48px}
+    .map-heading{align-items:flex-start;gap:10px}.map-heading .hud-pill{width:100%;justify-content:center}.map{padding:10px;border-radius:20px}.map-nodes{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.map-node{min-width:0;min-height:154px;padding:10px;border-radius:17px;text-align:left}.node-emoji{font-size:35px;margin:7px 0}.node-title{font-size:12px;line-height:1.25;overflow-wrap:anywhere}.node-desc{font-size:10px;line-height:1.3}.map-foot{display:grid;grid-template-columns:minmax(0,1fr);font-size:11px}.progress-track{width:100%}
+    .game-shell{border-radius:20px}.game-top{padding:12px;gap:10px;align-items:flex-start}.game-title-wrap{gap:9px;min-width:0;flex:1}.back-btn{width:46px;height:46px;border-radius:13px}.stage-kicker{font-size:9px;letter-spacing:.08em;line-height:1.35}.game-title{font-size:clamp(18px,5vw,23px);overflow-wrap:anywhere}.game-meta{display:flex;flex-wrap:wrap;gap:6px;width:100%;padding-left:55px}.meta-pill{font-size:10px;padding:7px 8px;line-height:1.2}
+    .scene{min-height:88px;padding:13px 14px;gap:7px}.scene-copy p{font-size:12px;line-height:1.45}.scene-emoji{font-size:36px;max-width:54px;flex:0 0 auto}.game-body{padding:13px}.instruction-row{gap:8px;margin-bottom:15px}.instruction{font-size:clamp(16px,4.5vw,20px);line-height:1.3;min-width:0}.instruction small{font-size:12px;line-height:1.45}.round-counter{font-size:10px;padding:7px 9px}
+    .word-card{min-height:91px;padding:9px 5px;border-radius:13px;gap:6px}.word-emoji{font-size:30px;line-height:1.1}.word-text{font-size:11px;letter-spacing:.015em;overflow-wrap:anywhere}.choice-grid{gap:8px}.choice-grid .word-card{min-height:112px}
+    .position-word{gap:10px;padding:13px 9px;border-radius:17px}.position-art{font-size:48px}.position-word-name{font-size:22px;letter-spacing:.04em}.listen-btn{min-height:42px;padding:10px;font-size:11px}.position-choices{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.position-btn{min-height:66px;padding:11px 3px;font-size:12px;overflow-wrap:anywhere}.position-btn span{font-size:9px;line-height:1.2}
+    .pair-layout{gap:9px}.pair-card{min-height:150px}.pair-card .word-emoji{font-size:clamp(42px,13vw,62px)}.pair-card .word-text{font-size:13px}.audio-prompt{gap:8px;padding:10px;margin-bottom:13px;flex-wrap:wrap}.audio-prompt .speaker{width:48px;height:48px;flex:0 0 48px}.audio-prompt .small-btn{min-height:42px;padding:9px 10px}.quiz-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quiz-option{min-height:94px}
+    .action-row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:18px}.action-hint{font-size:11px;line-height:1.45}.action-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:9px}.action-buttons button{min-width:0;min-height:46px;padding:11px 8px;font-size:12px;white-space:normal;line-height:1.25}.primary-btn,.secondary-btn{min-height:48px;padding:13px 14px;font-size:13px}.feedback{font-size:12px;align-items:flex-start;padding:11px;line-height:1.45}
+    .finale{padding:30px 13px}.finale>div:last-child{display:grid;grid-template-columns:minmax(0,1fr);gap:13px}.finale>div:last-child button{width:100%;min-height:48px;margin:0!important}.award{font-size:11px;line-height:1.35;white-space:normal}
+    .modal-backdrop{padding:12px;align-items:center;overflow-y:auto}.modal{padding:21px 17px;max-height:calc(100dvh - 24px);overflow-y:auto;width:100%;border-radius:20px}.modal-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}.modal-actions button{min-height:46px;width:100%}.toast{bottom:calc(12px + env(safe-area-inset-bottom));font-size:12px;max-width:calc(100vw - 20px)}
+    /* Persistent chooser means the child does not need to scroll back to the destination lanes. */
+    .mobile-sort-dock{position:fixed;left:10px;right:10px;bottom:calc(9px + env(safe-area-inset-bottom));z-index:25;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:9px;border:1px solid #d3e8dd;border-radius:18px;background:rgba(8,42,54,.96);box-shadow:0 10px 30px #03182280;opacity:0;transform:translateY(150%);pointer-events:none;transition:transform .2s ease,opacity .2s ease;backdrop-filter:blur(10px)}
+    .mobile-sort-dock.show{opacity:1;transform:translateY(0);pointer-events:auto}.mobile-sort-dock button{min-width:0;min-height:50px;border-radius:13px;padding:8px 5px;font-size:12px;font-weight:1000;line-height:1.15;white-space:normal;color:#fff;background:linear-gradient(180deg,#36a77c,#24815f);box-shadow:0 3px 0 #13563f}.mobile-sort-dock button.blue{background:linear-gradient(180deg,#65a8d1,#3e7fa9);box-shadow:0 3px 0 #285b7e}.mobile-sort-dock button:active{transform:translateY(2px);box-shadow:none}.game-body.mobile-sort-active{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+    .sort-lanes .drop-area{min-height:120px;padding:9px;gap:8px;cursor:pointer}.sort-lanes .lane-title{font-size:10px;letter-spacing:0;line-height:1.2;flex-wrap:wrap}.sort-lanes .lane-count{padding:3px 6px}.sort-lanes .lane-items{min-height:28px;gap:5px}.sort-lanes .lane-chip{min-height:36px;padding:8px 7px;font-size:11px}.sort-lanes .lane-empty{font-size:10px}.sort-lanes .dest-actions{margin-top:5px}.sort-lanes .dest-btn{min-height:44px;font-size:10px;line-height:1.2;padding:8px 4px;overflow-wrap:anywhere}
+  }
+  @media(max-width:380px){.hud-pill:nth-child(2){display:flex}.hud{gap:5px}.hud-pill{padding:7px 8px;font-size:10px}.map-node{min-height:148px;padding:9px}.card-bank{grid-template-columns:repeat(2,minmax(0,1fr))}.sort-lanes{gap:7px}.sort-lanes .drop-area{padding:7px}.sort-lanes .lane-title{font-size:9px}.sort-lanes .dest-btn{font-size:9px}.mobile-sort-dock button{font-size:11px}}
+  @media(max-width:700px) and (orientation:landscape){.topbar{grid-template-columns:auto 1fr;align-items:center}.hud{justify-content:flex-end}.hero{grid-template-columns:1.1fr .9fr}.hero-art{min-height:180px}.hero h1{font-size:34px}.hero-copy{font-size:12px;margin-bottom:12px}.hero-actions{grid-template-columns:1fr 1fr}.map-nodes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-height:520px) and (max-width:900px){.modal-backdrop{align-items:flex-start}.modal{margin:auto 0;max-height:calc(100dvh - 16px)}}
+</style>
+</head>
+<body>
+<div id="scriptErrorNotice" class="script-error" role="alert" hidden>Не удалось запустить игру в этом просмотрщике. Скачай файл и открой его в Safari или Chrome, а не в режиме предпросмотра.</div>
+<noscript><div class="no-script-message">Интерактивность отключена в этом просмотрщике. Скачай HTML-файл на телефон и открой его в браузере Safari или Chrome с включённым JavaScript.</div></noscript>
+<script>
+/* Show a clear hint if the browser reports an error in the main game script. */
+(function(){
+  function showScriptError(){
+    var box=document.getElementById('scriptErrorNotice');
+    if(box){box.hidden=false;box.textContent='Игра не смогла запуститься в этом просмотрщике. Скачай HTML-файл и открой его непосредственно в Safari или Chrome. Если он уже открыт в браузере, попробуй обновить страницу.';}
+  }
+  window.addEventListener('error', function(){showScriptError();});
+  window.addEventListener('unhandledrejection', function(){showScriptError();});
+})();
+</script>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand" aria-label="Остров Р и Л">
+      <div class="brand-mark">🧭</div>
+      <div><div class="brand-title">Остров <span style="color:#ffc85b">Р</span> и <span style="color:#8be2d3">Л</span></div><div class="brand-sub">Большое звуковое приключение</div></div>
+    </div>
+    <div class="hud">
+      <div class="hud-pill">💎 Сокровища <strong id="gemCount">0</strong></div>
+      <div class="hud-pill">🏝️ Открыто <strong id="unlockedCount">1/7</strong></div>
+      <button class="icon-btn" id="soundToggle" title="Включить или выключить озвучивание" aria-label="Включить или выключить озвучивание">🔊</button>
+      <button class="icon-btn" id="restartBtn" title="Начать игру заново" aria-label="Начать игру заново">↻</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen active" id="mapScreen" aria-labelledby="mainTitle">
+      <div class="hero">
+        <div class="hero-copy-wrap">
+          <span class="eyebrow">✦ Миссия: найти главный сундук</span>
+          <h1 id="mainTitle">ОСТРОВ<br><span>Р</span> и <span style="color:#8de2d4">Л</span></h1>
+          <p class="hero-copy">Лисёнок Рори и львёнок Ларс нашли карту сокровищ. Но путь спрятан среди звуков! Помоги друзьям пройти испытания, открыть новые места и отыскать главный сундук.</p>
+          <div class="hero-actions"><button class="primary-btn" id="continueBtn">⚓ Начать приключение</button><button class="secondary-btn" id="howBtn">Как играть?</button></div>
+        </div>
+        <div class="hero-art" aria-label="Лисёнок и львёнок на острове">
+          <div class="sun-disc"></div><div class="palm">🌴</div><div class="island"></div><div class="boat">⛵</div>
+          <div class="hero-friends"><div class="friend">🦊<span class="friend-label">РОРИ</span></div><div class="friend">🦁<span class="friend-label">ЛАРС</span></div></div>
+        </div>
+      </div>
+      <div class="map-heading"><div><h2>Карта приключения</h2><p>Каждая локация — новое звуковое испытание.</p></div><div class="hud-pill">⭐ Пройдено этапов <strong id="completedCount">0/7</strong></div></div>
+      <div class="map"><div class="map-sea"></div><div class="map-nodes" id="mapNodes"></div>
+        <div class="map-foot"><span id="mapTip">Начни с порта слогов — там готов корабль.</span><div class="progress-track" aria-label="Общий прогресс"><div class="progress-fill" id="overallProgress"></div></div></div>
+      </div>
+      <p class="footer-note">Игра тренирует различение твёрдых звуков [Р] и [Л]. В речевом материале используются слова и слоги без [И], [Е], [Ё], [Ю], [Я].</p>
+    </section>
+
+    <section class="screen" id="playScreen" aria-label="Игровое задание">
+      <div class="game-shell">
+        <div class="game-top">
+          <div class="game-title-wrap"><button class="back-btn" id="backMap" aria-label="Вернуться к карте">←</button><div><div class="stage-kicker" id="stageKicker">ЭТАП 1 ИЗ 7</div><h2 class="game-title" id="stageTitle">Порт слогов</h2></div></div>
+          <div class="game-meta"><span class="meta-pill" id="stageReward">💎 Награда: 3 кристалла</span><span class="meta-pill" id="questionProgress">Раунд 1</span></div>
+        </div>
+        <div class="scene"><div class="scene-copy"><p id="sceneText">Корабли готовы к отплытию! Разложи слоги по своим местам.</p></div><div class="scene-emoji" id="sceneEmoji">⛵</div></div>
+        <div class="game-body" id="gameBody"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="finalScreen" aria-label="Победа">
+      <div class="game-shell"><div class="finale"><div class="finale-art" id="finalArt">🏆</div><div class="eyebrow" style="background:#e8f5e8;color:#4d9276;border-color:#c5e6cf">✦ Миссия выполнена</div><h2 id="finalTitle">Ты — мастер звуков!</h2><p id="finalText">Все испытания пройдены. Рори и Ларс благодарят тебя за помощь!</p><div class="award">🏅 Золотая медаль «Мастер Р и Л»</div><div><button class="primary-btn" id="finalMapBtn">Вернуться на остров</button> <button class="secondary-btn" style="background:#eaf3eb;color:#35645e;border-color:#d6e7d8" id="playAgainBtn">Пройти ещё раз</button></div></div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><h2 id="modalTitle">Как играть?</h2><p id="modalText">Выбирай ответы, слушай слова и помогай героям.</p><div class="modal-actions"><button class="small-btn" id="modalClose">Понятно</button></div></div></div>
+<script>
+(() => {
+  'use strict';
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+  const FORBIDDEN = /[иеёюя]/i;
+  const stageDefs = [
+    {title:'Порт слогов',desc:'Собери слоги в правильные корабли.',emoji:'⛵',theme:'Разминка',reward:3},
+    {title:'Пляж сокровищ',desc:'Разложи находки по двум сундукам.',emoji:'🏝️',theme:'Сортировка',reward:3},
+    {title:'Джунгли звуков',desc:'Найди все слова по звуковому условию.',emoji:'🌴',theme:'Слуховое внимание',reward:4},
+    {title:'Маяк звуковых следов',desc:'Определи место звука в слове.',emoji:'🗼',theme:'Звуковой анализ',reward:4},
+    {title:'Попугай-путаница',desc:'Услышь слово и выбери правильную картинку.',emoji:'🦜',theme:'Контрастные пары',reward:4},
+    {title:'Пещера испытаний',desc:'Смешанные задания ждут внутри пещеры.',emoji:'💎',theme:'Смешанный раунд',reward:5},
+    {title:'Главный сундук',desc:'Последнее испытание на пути к сокровищам.',emoji:'🗝️',theme:'Финал',reward:8,final:true}
+  ];
+  const syllableData = [
+    {w:'РА',s:'R'},{w:'ЛА',s:'L'},{w:'РО',s:'R'},{w:'ЛО',s:'L'},
+    {w:'РУ',s:'R'},{w:'ЛУ',s:'L'},{w:'РЫ',s:'R'},{w:'ЛЫ',s:'L'},
+    {w:'КРА',s:'R'},{w:'КЛА',s:'L'},{w:'ПРО',s:'R'},{w:'ПЛО',s:'L'}
+  ];
+  const wordData = [
+    {w:'РАК',e:'🦀',s:'R',pos:'start'}, {w:'РОТ',e:'👄',s:'R',pos:'start'},
+    {w:'РОГ',e:'🐂',s:'R',pos:'start'}, {w:'РЫБА',e:'🐟',s:'R',pos:'start'},
+    {w:'РОЗА',e:'🌹',s:'R',pos:'start'}, {w:'РАМА',e:'🖼️',s:'R',pos:'start'},
+    {w:'РУКА',e:'✋',s:'R',pos:'start'}, {w:'ГОРА',e:'⛰️',s:'R',pos:'middle'},
+    {w:'ДОРОГА',e:'🛣️',s:'R',pos:'middle'}, {w:'КОРОВА',e:'🐄',s:'R',pos:'middle'},
+    {w:'КОМАР',e:'🦟',s:'R',pos:'end'}, {w:'ШАР',e:'🎈',s:'R',pos:'end'},
+    {w:'СЫР',e:'🧀',s:'R',pos:'end'}, {w:'ЛАК',e:'🧴',s:'L',pos:'start'},
+    {w:'ЛУК',e:'🧅',s:'L',pos:'start'}, {w:'ЛОБ',e:'🙂',s:'L',pos:'start'},
+    {w:'ЛАПА',e:'🐾',s:'L',pos:'start'}, {w:'ЛУНА',e:'🌙',s:'L',pos:'start'},
+    {w:'ЛОДКА',e:'🛶',s:'L',pos:'start'}, {w:'МОЛОКО',e:'🥛',s:'L',pos:'middle'},
+    {w:'КОЛОБОК',e:'🟠',s:'L',pos:'middle'}, {w:'ПАЛКА',e:'🪵',s:'L',pos:'middle'},
+    {w:'ПОЛКА',e:'🗄️',s:'L',pos:'middle'}, {w:'СТОЛ',e:'🪑',s:'L',pos:'end'},
+    {w:'СТУЛ',e:'🪑',s:'L',pos:'end'}, {w:'УГОЛ',e:'📐',s:'L',pos:'end'}
+  ];
+  const distractors = [
+    {w:'ДОМ',e:'🏠',s:'N'},{w:'КОТ',e:'🐈',s:'N'},{w:'МАК',e:'🌺',s:'N'},
+    {w:'СУП',e:'🍲',s:'N'},{w:'НОС',e:'👃',s:'N'},{w:'СОМ',e:'🐟',s:'N'}
+  ];
+  const positionNames = {start:'В начале',middle:'В середине',end:'В конце'};
+  const stageChecks = [
+    ['РА','ЛА','РО','ЛО','РУ','ЛУ','РЫ','ЛЫ','КРА','КЛА','ПРО','ПЛО'],
+    ['РАК','РОТ','РОГ','РЫБА','РОЗА','РАМА','РУКА','ЛАК','ЛУК','ЛОБ','ЛАПА','ЛУНА','ЛОДКА'],
+    ['РАК','РУКА','РОЗА','ЛУК','МАК','ДОМ','ЛАПА','ПАЛКА','СТОЛ','ШАР','НОС','КОТ']
+  ];
+  // Safety guard: catch prohibited vowels in actual target words and syllables.
+  const prohibited = [...syllableData.map(x=>x.w), ...wordData.map(x=>x.w)];
+  if (prohibited.some(w => FORBIDDEN.test(w))) console.warn('Проверьте речевой материал: найден запрещённый звук/буква.', prohibited.filter(w=>FORBIDDEN.test(w)));
+
+  let progress = {unlocked:0,completed:[],gems:0};
+  let soundOn = true;
+  let currentStage = 0;
+  let selectedCard = null;
+  let selectedMulti = new Set();
+  let assigned = {};
+  let roundIndex = 0;
+  let roundQueue = [];
+  let activeRound = null;
+  let answered = false;
+  let stageErrors = 0;
+  let visibleLabels = true;
+  let feedbackTimer = null;
+
+  const loadProgress = () => {
+    try { const p=JSON.parse(localStorage.getItem('islandRLProgress')||'null'); if(p&&typeof p==='object'){progress.unlocked=Math.min(6,Math.max(0,Number(p.unlocked)||0));progress.completed=Array.isArray(p.completed)?p.completed.filter(n=>Number.isInteger(n)&&n>=0&&n<7):[];progress.gems=Math.max(0,Number(p.gems)||0);} } catch(e) {}
+  };
+  const saveProgress = () => { try{localStorage.setItem('islandRLProgress',JSON.stringify(progress));}catch(e){} };
+  const shuffle = arr => {const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+  const esc = str => String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const say = (text, rate=0.86) => {
+    if(!soundOn || !('speechSynthesis' in window)) return;
+    try { window.speechSynthesis.cancel(); const utter=new SpeechSynthesisUtterance(text);utter.lang='ru-RU';utter.rate=rate;utter.pitch=1.02;const voices=window.speechSynthesis.getVoices();const ru=voices.find(v=>/^ru(-|_)/i.test(v.lang));if(ru)utter.voice=ru;window.speechSynthesis.speak(utter); } catch(e) {}
+  };
+  const toast = msg => {const el=$('#toast');const dock=$('#mobileSortDock');el.style.bottom=(dock&&dock.classList.contains('show')&&window.matchMedia('(max-width: 700px)').matches)?'calc(86px + env(safe-area-inset-bottom))':'';el.textContent=msg;el.classList.add('show');clearTimeout(feedbackTimer);feedbackTimer=setTimeout(()=>{el.classList.remove('show');el.style.bottom='';},2500);};
+  const updateHud = () => {
+    $('#gemCount').textContent=progress.gems;
+    $('#unlockedCount').textContent=`${progress.unlocked+1}/7`;
+    $('#completedCount').textContent=`${progress.completed.length}/7`;
+    $('#overallProgress').style.width=`${progress.completed.length/7*100}%`;
+    $('#soundToggle').textContent=soundOn?'🔊':'🔇';
+    $('#soundToggle').setAttribute('aria-label',soundOn?'Выключить озвучивание':'Включить озвучивание');
+  };
+  const renderMap = () => {
+    const map=$('#mapNodes');map.innerHTML='';
+    stageDefs.forEach((st,i)=>{
+      const unlocked=i<=progress.unlocked;const done=progress.completed.includes(i);
+      const b=document.createElement('button');b.type='button';b.className='map-node'+(done?' node-done':'')+(st.final?' node-final':'');b.disabled=!unlocked;
+      b.setAttribute('aria-label',`${i+1}. ${st.title}${done?', пройдено':''}${!unlocked?', закрыто':''}`);
+      b.innerHTML=`<div class="node-top"><span class="node-num">ЭТАП ${String(i+1).padStart(2,'0')}</span><span class="node-status">${done?'✅':unlocked?'🔓':'🔒'}</span></div><span class="node-emoji">${st.emoji}</span><span class="node-title">${esc(st.title)}</span><span class="node-desc">${esc(st.desc)}</span>`;
+      b.addEventListener('click',()=>{if(unlocked)startStage(i);});map.appendChild(b);
+    });
+    $('#mapTip').textContent=progress.completed.length===7?'Все испытания пройдены — сокровища твои!':progress.completed.length===0?'Начни с порта слогов — там готов корабль.':`Следующая цель: ${stageDefs[Math.min(progress.unlocked,6)].title}.`;
+    $('#continueBtn').textContent=progress.completed.length===7?'🏆 Посмотреть награду':progress.completed.length?'⚓ Продолжить приключение':'⚓ Начать приключение';
+    updateHud();
+  };
+  const switchScreen = name => {const dock=$('#mobileSortDock');if(dock&&name!=='playScreen')dock.classList.remove('show');$$('.screen').forEach(s=>s.classList.remove('active'));$('#'+name).classList.add('active');try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){try{window.scrollTo(0,0);}catch(_){}}};
+  const renderFeedback = (kind,text) => {let f=$('#feedback');if(!f)return;f.className=`feedback show ${kind}`;f.innerHTML=`<span class="feedback-icon">${kind==='good'?'✨':'💡'}</span><span>${text}</span>`;};
+  const resetFeedback = () => {const f=$('#feedback');if(f){f.className='feedback';f.innerHTML='';}};
+  const baseGameBody = content => `<div class="instruction-row"><p class="instruction" id="instructionText"></p><span class="round-counter" id="roundCounter"></span></div><div id="taskContent">${content}</div><div id="feedback" class="feedback" role="status" aria-live="polite"></div><div class="action-row"><div class="action-hint" id="actionHint">Выбирай внимательно. Здесь важен звук, а не буква.</div><div class="action-buttons" id="actionButtons"></div></div>`;
+  const makeCard = (item, opts={}) => {
+    const cls=['word-card'];if(opts.multi)cls.push('choice-card');if(opts.syllable)cls.push('syllable-option');
+    const b=document.createElement('button');b.type='button';b.className=cls.join(' ');b.dataset.word=item.w;b.dataset.sound=item.s||'';b.dataset.pos=item.pos||'';b.setAttribute('aria-label',item.w);
+    const emoji=opts.syllable?'🔤':(item.e||'🔹');
+    b.innerHTML=`<span class="word-emoji">${emoji}</span><span class="word-text">${esc(item.w)}</span>`;
+    if(opts.speak){const sp=document.createElement('span');sp.className='card-small-action';sp.textContent='🔊';sp.title='Послушать слово';sp.setAttribute('role','button');sp.addEventListener('click',e=>{e.stopPropagation();say(item.w);});b.appendChild(sp);}
+    return b;
+  };
+  const addButton = (parent,label,fn,cls='small-btn') => {const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.addEventListener('click',fn);parent.appendChild(b);return b;};
+  const setupShell = i => {
+    const oldDock=$('#mobileSortDock');if(oldDock)oldDock.remove();
+    $('#gameBody').classList.remove('mobile-sort-active');
+    const st=stageDefs[i];$('#stageKicker').textContent=`ЭТАП ${i+1} ИЗ 7 · ${st.theme.toUpperCase()}`;$('#stageTitle').textContent=st.title;$('#stageReward').textContent=`💎 Награда: ${st.reward} кристаллов`;
+    $('#sceneText').textContent=st.desc;$('#sceneEmoji').textContent=st.emoji;$('#gameBody').innerHTML=baseGameBody('');
+  };
+  const showCounter = (n,total) => {$('#questionProgress').textContent=`Раунд ${Math.min(n+1,total)} / ${total}`;$('#roundCounter').textContent=`${Math.min(n+1,total)} из ${total}`;};
+  const startStage = i => {
+    if(i>progress.unlocked)return;
+    currentStage=i;selectedCard=null;selectedMulti=new Set();assigned={};roundIndex=0;activeRound=null;answered=false;stageErrors=0;roundQueue=[];
+    switchScreen('playScreen');setupShell(i);
+    if(i===0) renderSortStage(true);
+    else if(i===1) renderSortStage(false);
+    else if(i===2) setupJungle();
+    else if(i===3) setupPosition();
+    else if(i===4) setupParrot();
+    else if(i===5) setupCave();
+    else setupFinalQuiz();
+  };
+  const onStageCorrect = (message='Верно!') => {
+    answered=true;renderFeedback('good',message);say('Правильно!');
+  };
+  const onStageWrong = (message='Попробуй ещё раз. Послушай слово внимательно.') => {
+    stageErrors++;renderFeedback('try',message);say('Попробуй ещё раз.');
+  };
+  const finishStage = () => {
+    const st=stageDefs[currentStage];
+    if(!progress.completed.includes(currentStage)){progress.completed.push(currentStage);progress.gems+=st.reward;}
+    progress.unlocked=Math.max(progress.unlocked,Math.min(6,currentStage+1));saveProgress();updateHud();
+    if(currentStage===6){$('#finalArt').textContent='🏆';$('#finalTitle').textContent='Ты — мастер звуков!';$('#finalText').textContent=`Ты прошёл все семь этапов острова, помог Рори и Ларсу и собрал ${progress.gems} кристаллов. Теперь главный сундук открыт!`;switchScreen('finalScreen');say('Поздравляем! Ты мастер звуков. Все испытания пройдены.');return;}
+    const next=stageDefs[currentStage+1];
+    $('#gameBody').innerHTML=`<div class="finale"><div class="finale-art">${st.emoji}</div><div class="eyebrow" style="background:#e8f5e8;color:#4d9276;border-color:#c5e6cf">✦ Этап пройден</div><h2 style="font-size:clamp(27px,4vw,42px);margin-top:16px;color:#184b57">Отличная работа!</h2><p>Ты помог героям пройти локацию «${esc(st.title)}». На карте появилась новая отметка, а в копилке стало больше кристаллов.</p><div class="award">💎 +${st.reward} кристалла</div><div><button class="primary-btn" id="nextStageBtn">Продолжить путь →</button> <button class="secondary-btn" style="background:#eaf3eb;color:#35645e;border-color:#d6e7d8" id="stageMapBtn">К карте</button></div></div>`;
+    $('#nextStageBtn').addEventListener('click',()=>startStage(currentStage+1));$('#stageMapBtn').addEventListener('click',()=>{renderMap();switchScreen('mapScreen');});
+    $('#questionProgress').textContent='Пройдено ✓';renderMap();say(`Этап пройден. ${next.title}.`);
+  };
+  const afterAnswer = (message) => {
+    if(answered) return;
+    onStageCorrect(message);
+    const buttons=$$('#actionButtons button');buttons.forEach(b=>b.disabled=true);
+    if(roundIndex>=roundQueue.length-1){
+      addButton($('#actionButtons'),'Завершить этап ✓',finishStage,'small-btn primary');
+    } else {
+      addButton($('#actionButtons'),'Дальше →',()=>{roundIndex++;if(currentStage===2)renderJungleRound();else if(currentStage===3)renderPositionRound();else if(currentStage===4)renderParrotRound();else if(currentStage===5)renderCaveRound();else if(currentStage===6)renderFinalRound();},'small-btn primary');
+    }
+  };
+  const setInstruction = (title,sub='') => {$('#instructionText').innerHTML=`${title}${sub?`<small>${sub}</small>`:''}`;};
+
+  // 1 and 2: sort syllables/words into two destination lanes. Works with click or drag.
+  function renderSortStage(isSyllables){
+    const oldDock=$('#mobileSortDock');if(oldDock)oldDock.remove();
+    const items=isSyllables?shuffle(syllableData):shuffle(wordData.filter(x=>x.s==='R'||x.s==='L').slice(0,18));
+    // Keep the second stage balanced, with nine items of each sound.
+    const balanced=isSyllables?items:shuffle([...shuffle(wordData.filter(x=>x.s==='R')).slice(0,9),...shuffle(wordData.filter(x=>x.s==='L')).slice(0,9)]);
+    activeRound={items:balanced,isSyllables,assigned:new Map()};
+    $('#sceneText').textContent=isSyllables?'Корабли готовы к отплытию! Разложи слоги по своим местам.':'После шторма на берегу остались находки. Помоги разложить их по сундукам.';
+    $('#sceneEmoji').textContent=isSyllables?'⛵':'🧰';
+    showCounter(0,1);
+    setInstruction(isSyllables?'Загрузи слоги на нужный корабль':'Разложи сокровища по двум сундукам',isSyllables?'Слог со звуком [Р] — на корабль Рори. Слог со звуком [Л] — на корабль Ларса.':'Каждое слово содержит только один из целевых твёрдых звуков: [Р] или [Л].');
+    const body=$('#taskContent');body.innerHTML=`<div class="sort-layout"><div class="card-bank" id="cardBank"></div><div class="sort-lanes"><div class="drop-area" data-lane="R" id="laneR"><div class="lane-title">🚢 Корабль [Р] <span class="lane-count" id="countR">0</span></div><div class="lane-items" id="itemsR"><span class="lane-empty">Перетащи сюда карточки</span></div><div class="dest-actions"><button class="dest-btn" data-dest="R">Отправить к Рори</button></div></div><div class="drop-area lane-l" data-lane="L" id="laneL" style="margin-top:12px"><div class="lane-title">⛵ Корабль [Л] <span class="lane-count" id="countL">0</span></div><div class="lane-items" id="itemsL"><span class="lane-empty">Перетащи сюда карточки</span></div><div class="dest-actions"><button class="dest-btn blue" data-dest="L">Отправить к Ларсу</button></div></div></div></div><div class="mobile-sort-dock" id="mobileSortDock" aria-label="Выбери, куда отправить карточку"><button type="button" id="mobileChooseR">🚢 Корабль [Р]</button><button type="button" class="blue" id="mobileChooseL">⛵ Корабль [Л]</button></div>`;
+    $('#gameBody').classList.add('mobile-sort-active');
+    document.body.appendChild($('#mobileSortDock'));
+    const bank=$('#cardBank');balanced.forEach((item,idx)=>{const card=makeCard(item,{syllable:isSyllables,speak:!isSyllables});card.dataset.id=String(idx);card.draggable=true;card.addEventListener('click',()=>{if(activeRound.assigned.has(idx))return;selectedCard=idx;$$('.word-card',bank).forEach(c=>c.classList.toggle('selected',c===card));updateMobileSortDock();toast(`Выбрано: ${item.w}. Нажми на нужный корабль внизу экрана.`);});card.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',String(idx));e.dataTransfer.effectAllowed='move';selectedCard=idx;updateMobileSortDock();});bank.appendChild(card);});
+    $$('.drop-area').forEach(lane=>{lane.addEventListener('dragover',e=>{e.preventDefault();lane.classList.add('dragover');});lane.addEventListener('dragleave',()=>lane.classList.remove('dragover'));lane.addEventListener('drop',e=>{e.preventDefault();lane.classList.remove('dragover');const id=Number(e.dataTransfer.getData('text/plain'));assignCard(id,lane.dataset.lane);});lane.addEventListener('click',e=>{if(e.target.closest('button'))return;if(selectedCard===null){toast('Сначала выбери карточку.');return;}assignCard(selectedCard,lane.dataset.lane);});});
+    $$('[data-dest]').forEach(b=>b.addEventListener('click',()=>{if(selectedCard===null){toast('Сначала выбери карточку.');return;}assignCard(selectedCard,b.dataset.dest);}));
+    $('#mobileChooseR').addEventListener('click',()=>{if(selectedCard===null){toast('Сначала выбери карточку.');return;}assignCard(selectedCard,'R');});
+    $('#mobileChooseL').addEventListener('click',()=>{if(selectedCard===null){toast('Сначала выбери карточку.');return;}assignCard(selectedCard,'L');});
+    $('#actionHint').textContent='Нажми на карточку, а затем на нужный корабль. Также можно перетаскивать карточки мышью.';
+    $('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Проверить ответы',checkSort,'small-btn primary');addButton($('#actionButtons'),'Сбросить раскладку',()=>renderSortStage(isSyllables),'small-btn');
+  }
+  function updateMobileSortDock(){const dock=$('#mobileSortDock');if(!dock)return;const selected=selectedCard!==null&&activeRound&&activeRound.items[selectedCard];dock.classList.toggle('show',!!selected);$('#mobileChooseR').textContent=`🚢 [Р] · ${$('#countR')?.textContent||'0'}`;$('#mobileChooseL').textContent=`⛵ [Л] · ${$('#countL')?.textContent||'0'}`;}
+  function assignCard(idx,lane){if(!activeRound||idx==null||Number.isNaN(idx))return;const item=activeRound.items[idx];if(!item)return;if(activeRound.assigned.has(idx))return;activeRound.assigned.set(idx,lane);const card=$(`.word-card[data-id="${idx}"]`);if(card){card.classList.remove('selected');card.classList.add('correct');card.disabled=true;card.style.opacity='.55';card.style.transform='scale(.94)';}
+    const laneItems=$('#items'+lane);if(laneItems.querySelector('.lane-empty'))laneItems.innerHTML='';const chip=document.createElement('button');chip.type='button';chip.className='lane-chip';chip.textContent=item.w;chip.title='Нажми, чтобы вернуть карточку';chip.setAttribute('aria-label',`Вернуть карточку ${item.w}`);chip.addEventListener('click',()=>{activeRound.assigned.delete(idx);const c=$(`.word-card[data-id="${idx}"]`);if(c){c.disabled=false;c.style.opacity='';c.style.transform='';c.classList.remove('correct','wrong');}chip.remove();refreshLanes();selectedCard=idx;$$('.word-card[data-id]').forEach(x=>x.classList.toggle('selected',x.dataset.id===String(idx)));updateMobileSortDock();});laneItems.appendChild(chip);selectedCard=null;refreshLanes();updateMobileSortDock();resetFeedback();}
+  function refreshLanes(){['R','L'].forEach(l=>{const ct=[...activeRound.assigned.values()].filter(x=>x===l).length;$('#count'+l).textContent=ct;if(!ct){$('#items'+l).innerHTML='<span class="lane-empty">Пока пусто</span>';}});updateMobileSortDock();}
+  function checkSort(){const {items,assigned}=activeRound;if(assigned.size!==items.length){onStageWrong(`Разложены не все карточки. Осталось: ${items.length-assigned.size}.`);return;}const wrong=items.filter((item,idx)=>assigned.get(idx)!==item.s);if(wrong.length){onStageWrong(`Есть ошибки: ${wrong.map(x=>x.w).slice(0,3).join(', ')}. Верни эти карточки и попробуй ещё раз.`);wrong.forEach(item=>{const idx=items.indexOf(item);const card=$(`.word-card[data-id="${idx}"]`);if(card)card.classList.add('wrong');});say('Проверь, какой звук слышится в каждом слоге или слове.');return;}onStageCorrect('Все карточки на своих местах! Корабли готовы к отплытию.');$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Продолжить →',finishStage,'small-btn primary');}
+
+  // 3: select all words meeting the instruction.
+  function setupJungle(){roundQueue=[
+    {title:'Найди слова, которые начинаются со звука [Р]',sub:'Выбери все подходящие картинки.',items:[...wordData.filter(x=>['РАК','РУКА','РОЗА'].includes(x.w)),...distractors.filter(x=>['МАК','ДОМ','КОТ'].includes(x.w))],correct:['РАК','РУКА','РОЗА'],say:'Найди слова, которые начинаются со звука эр.'},
+    {title:'Найди слова, в которых есть звук [Л]',sub:'Звук [Л] может быть в начале, середине или конце.',items:[...wordData.filter(x=>['ЛАПА','ПАЛКА','СТОЛ','ШАР'].includes(x.w)),...distractors.filter(x=>['НОС','КОТ'].includes(x.w))],correct:['ЛАПА','ПАЛКА','СТОЛ'],say:'Найди слова, в которых есть звук эл.'},
+    {title:'Найди слова, которые начинаются со звука [Л]',sub:'Собери все подходящие слова.',items:[...wordData.filter(x=>['ЛУК','ЛАПА','ЛОБ','РОТ','РАК'].includes(x.w)),...distractors.filter(x=>['СУП'].includes(x.w))],correct:['ЛУК','ЛАПА','ЛОБ'],say:'Найди слова, которые начинаются со звука эл.'}
+  ].map(r=>({...r,items:shuffle(r.items)}));roundIndex=0;renderJungleRound();}
+  function renderJungleRound(){answered=false;selectedMulti=new Set();resetFeedback();const r=roundQueue[roundIndex];showCounter(roundIndex,roundQueue.length);setInstruction(r.title,r.sub);$('#sceneEmoji').textContent='🌿';$('#sceneText').textContent='Тропинка появится, когда будут выбраны все нужные слова.';const wrap=$('#taskContent');wrap.innerHTML='<div class="choice-grid" id="jungleCards"></div>';r.items.forEach(item=>{const c=makeCard(item);c.addEventListener('click',()=>{if(answered)return;if(selectedMulti.has(item.w)){selectedMulti.delete(item.w);c.classList.remove('selected');}else{selectedMulti.add(item.w);c.classList.add('selected');} });$('#jungleCards').appendChild(c);});$('#actionHint').textContent='Можно выбрать несколько картинок. Затем нажми «Проверить выбор».';$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Проверить выбор',()=>{if(answered)return;const expected=new Set(r.correct);const equal=selectedMulti.size===expected.size&&[...expected].every(w=>selectedMulti.has(w));if(equal)afterAnswer('Верно! Тропинка становится видимой.');else onStageWrong('Посмотри на условие ещё раз. Выбери все подходящие слова и не добавляй лишние.');},'small-btn primary');addButton($('#actionButtons'),'Слушать условие',()=>say(r.say),'small-btn');}
+
+  // 4: locate target sound in word.
+  function setupPosition(){roundQueue=shuffle([
+    {item:wordData.find(x=>x.w==='РАК'),sound:'R',pos:'start'},
+    {item:wordData.find(x=>x.w==='ГОРА'),sound:'R',pos:'middle'},
+    {item:wordData.find(x=>x.w==='КОМАР'),sound:'R',pos:'end'},
+    {item:wordData.find(x=>x.w==='ЛАПА'),sound:'L',pos:'start'},
+    {item:wordData.find(x=>x.w==='ПАЛКА'),sound:'L',pos:'middle'},
+    {item:wordData.find(x=>x.w==='СТУЛ'),sound:'L',pos:'end'}
+  ]);roundIndex=0;renderPositionRound();}
+  function renderPositionRound(){answered=false;resetFeedback();const q=roundQueue[roundIndex];showCounter(roundIndex,roundQueue.length);setInstruction(`Где слышится звук [${q.sound==='R'?'Р':'Л'}]?`,'Послушай слово и выбери его место.');$('#sceneEmoji').textContent='🔦';$('#sceneText').textContent='Маяк загорится, когда ты найдёшь нужный звуковой след.';$('#taskContent').innerHTML=`<div class="position-word"><div class="position-art">${q.item.e}</div><div><div class="position-word-name">${q.item.w}</div><button class="listen-btn" id="listenWord">🔊 Послушать слово</button></div></div><div class="position-choices" id="positionChoices"></div>`;const choices=$('#positionChoices');Object.entries(positionNames).forEach(([key,label])=>{const b=document.createElement('button');b.type='button';b.className='position-btn';b.innerHTML=`${label}<span>${key==='start'?'первый звук':key==='middle'?'внутри слова':'последний звук'}</span>`;b.addEventListener('click',()=>{if(answered)return;if(key===q.pos)afterAnswer(`Верно! Звук [${q.sound==='R'?'Р':'Л'}] слышится: ${label.toLowerCase()}.`);else{b.classList.add('selected');onStageWrong('Подумай, где звук слышится в слове: в начале, середине или конце.');}});choices.appendChild(b);});$('#listenWord').addEventListener('click',()=>say(q.item.w));$('#actionHint').textContent='Нажми «Послушать слово», если нужно повторить. Затем выбери позицию звука.';$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Повторить слово 🔊',()=>say(q.item.w),'small-btn');}
+
+  // 5: listen to a word and select its picture in a contrasting pair.
+  function setupParrot(){const pairs=[
+    {a:{w:'РАК',e:'🦀',s:'R'},b:{w:'ЛАК',e:'🧴',s:'L'}},
+    {a:{w:'РАМА',e:'🖼️',s:'R'},b:{w:'ЛАМА',e:'🦙',s:'L'}},
+    {a:{w:'РОЗА',e:'🌹',s:'R'},b:{w:'ЛОЗА',e:'🌿',s:'L'}}
+  ];roundQueue=shuffle(pairs.flatMap(p=>[p.a,p.b]).map((item,idx)=>({item,options:pairs.find(p=>p.a.w===item.w||p.b.w===item.w)})));roundQueue=roundQueue.map(q=>({...q,choices:[q.options.a,q.options.b]}));roundIndex=0;visibleLabels=true;renderParrotRound();}
+  function renderParrotRound(){answered=false;resetFeedback();const q=roundQueue[roundIndex];showCounter(roundIndex,roundQueue.length);setInstruction('Послушай слово и найди нужную картинку','Нажми на динамик. Слово можно прослушать ещё раз.');$('#sceneEmoji').textContent='🦜';$('#sceneText').textContent='Попугай перепутал названия. Помоги ему найти правильное изображение.';const showWords=visibleLabels;$('#taskContent').innerHTML=`<div class="audio-prompt"><button class="speaker" id="repeatWord" aria-label="Повторить слово">🔊</button><div><strong>Слушай внимательно</strong><small>${showWords?'Подписи включены':'Подписи скрыты'}</small></div><button class="small-btn" id="labelsToggle">${showWords?'Скрыть подписи':'Показать подписи'}</button></div><div class="pair-layout" id="pairCards"></div>`;const options=shuffle(q.choices);options.forEach(item=>{const c=makeCard(item);c.classList.add('pair-card');if(!showWords)c.querySelector('.word-text').style.visibility='hidden';c.addEventListener('click',()=>{if(answered)return;if(item.w===q.item.w)afterAnswer(`Верно! Это слово «${q.item.w.toLowerCase()}».`);else{c.classList.add('wrong');onStageWrong('Это другая картинка. Прослушай слово ещё раз.');}});$('#pairCards').appendChild(c);});$('#repeatWord').addEventListener('click',()=>say(q.item.w));$('#labelsToggle').addEventListener('click',()=>{visibleLabels=!visibleLabels;renderParrotRound();});$('#actionHint').textContent='Можно включать и скрывать подписи к картинкам.';$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Произнести ещё раз 🔊',()=>say(q.item.w),'small-btn');setTimeout(()=>{if(currentStage===4&&roundIndex===0&&soundOn)say(q.item.w);},200);}
+
+  // Common single-choice question renderer for stage 6 and final stage.
+  function setupCave(){roundQueue=buildMixedQuestions(7);roundIndex=0;renderCaveRound();}
+  function buildMixedQuestions(count){
+    const all=[
+      {kind:'syllable',title:'Выбери слог со звуком [Р]',options:['ЛА','РО','ЛЫ','ЛУ'],answer:'РО'},
+      {kind:'syllable',title:'Выбери слог со звуком [Л]',options:['РА','ЛУ','РЫ','РО'],answer:'ЛУ'},
+      {kind:'word',title:'Найди слово, которое начинается со звука [Р]',options:['ЛУК','РАК','МАК','ДОМ'],answer:'РАК'},
+      {kind:'word',title:'Найди слово, которое начинается со звука [Л]',options:['РОТ','ЛАПА','КОТ','СУП'],answer:'ЛАПА'},
+      {kind:'position',title:'В каком слове звук [Р] слышится в конце?',options:['РУКА','ГОРА','ШАР','РАК'],answer:'ШАР'},
+      {kind:'positionL',title:'В каком слове звук [Л] слышится в середине?',options:['ЛУК','ПАЛКА','СТОЛ','ЛОБ'],answer:'ПАЛКА'},
+      {kind:'word',title:'Выбери слово со звуком [Л]',options:['СЫР','ЛУНА','НОС','КОТ'],answer:'ЛУНА'},
+      {kind:'position',title:'В каком слове звук [Р] слышится в начале?',options:['КОМАР','РАМА','ШАР','ГОРА'],answer:'РАМА'},
+      {kind:'syllable',title:'Выбери слог со звуком [Л]',options:['КРА','ПРО','КЛА','РУ'],answer:'КЛА'},
+      {kind:'positionL',title:'В каком слове звук [Л] слышится в конце?',options:['ЛАПА','СТУЛ','ПАЛКА','ЛУК'],answer:'СТУЛ'},
+      {kind:'word',title:'Выбери слово со звуком [Р]',options:['СОМ','РОЗА','ЛАК','ДОМ'],answer:'РОЗА'}
+    ];
+    return shuffle(all).slice(0,count).map(q=>({...q,options:shuffle(q.options)}));
+  }
+  function renderSingleChoiceRound(queue,nextHandler){answered=false;resetFeedback();const q=queue[roundIndex];showCounter(roundIndex,queue.length);setInstruction(q.title,'Выбери один правильный ответ.');$('#sceneEmoji').textContent=currentStage===5?'💎':'🗝️';$('#sceneText').textContent=currentStage===5?'Кристалл загорается после каждого верного ответа.':'Каждый ответ приближает тебя к главному сундуку.';const isSyllable=q.kind==='syllable';const cards=q.options.map(opt=>{if(isSyllable)return {w:opt,s:opt.includes('Р')?'R':'L'};return wordData.find(x=>x.w===opt)||distractors.find(x=>x.w===opt)||{w:opt,e:'🔹'};});$('#taskContent').innerHTML=`<div class="quiz-options" id="quizOptions"></div>`;cards.forEach(item=>{const c=makeCard(item,{syllable:isSyllable});c.classList.add('quiz-option');if(isSyllable){c.querySelector('.word-emoji').textContent='';c.querySelector('.word-emoji').style.fontSize='0';c.querySelector('.word-text').style.fontSize='25px';}c.addEventListener('click',()=>{if(answered)return;if(item.w===q.answer)afterAnswer(`Верно! ${q.answer} — правильный ответ.`);else{c.classList.add('wrong');onStageWrong('Не спеши. Послушай условие ещё раз и попробуй другую карточку.');}});$('#quizOptions').appendChild(c);});$('#actionHint').textContent='В каждом вопросе только один правильный ответ.';$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Повторить условие 🔊',()=>say(q.title),'small-btn');}
+  function renderCaveRound(){renderSingleChoiceRound(roundQueue,renderCaveRound);}
+  function setupFinalQuiz(){roundQueue=buildMixedQuestions(5);roundQueue.push({kind:'listen',title:'Послушай и найди пару',options:['РАМА','ЛАМА'],answer:Math.random()<0.5?'РАМА':'ЛАМА'});roundIndex=0;renderFinalRound();}
+  function renderFinalRound(){
+    const q=roundQueue[roundIndex];
+    if(q.kind==='listen'){
+      answered=false;resetFeedback();showCounter(roundIndex,roundQueue.length);setInstruction(q.title,'Выбери картинку, которую назовёт герой.');$('#sceneEmoji').textContent='🗝️';$('#sceneText').textContent='Почти у цели! Последние вопросы откроют главный сундук.';const opts=shuffle([{w:'РАМА',e:'🖼️'},{w:'ЛАМА',e:'🦙'}]);$('#taskContent').innerHTML=`<div class="audio-prompt"><button class="speaker" id="repeatFinal">🔊</button><div><strong>Слово от Рори</strong><small>Слушай и выбирай</small></div></div><div class="pair-layout" id="pairFinal"></div>`;opts.forEach(item=>{const c=makeCard(item);c.classList.add('pair-card');c.addEventListener('click',()=>{if(answered)return;if(item.w===q.answer)afterAnswer('Верно! Ты услышал нужный звук.');else onStageWrong('Прослушай слово ещё раз.');});$('#pairFinal').appendChild(c);});$('#repeatFinal').addEventListener('click',()=>say(q.answer));setTimeout(()=>{if(currentStage===6&&soundOn)say(q.answer);},200);$('#actionButtons').innerHTML='';addButton($('#actionButtons'),'Повторить слово 🔊',()=>say(q.answer),'small-btn');
+    } else renderSingleChoiceRound(roundQueue,renderFinalRound);
+  }
+
+  // Navigation and dialogs.
+  $('#continueBtn').addEventListener('click',()=>{if(progress.completed.length===7){switchScreen('finalScreen');return;}startStage(Math.min(progress.unlocked,6));});
+  $('#backMap').addEventListener('click',()=>{renderMap();switchScreen('mapScreen');});
+  $('#finalMapBtn').addEventListener('click',()=>{renderMap();switchScreen('mapScreen');});
+  $('#playAgainBtn').addEventListener('click',()=>{progress={unlocked:0,completed:[],gems:0};saveProgress();renderMap();startStage(0);});
+  $('#soundToggle').addEventListener('click',()=>{soundOn=!soundOn;if(!soundOn&&'speechSynthesis'in window)window.speechSynthesis.cancel();updateHud();toast(soundOn?'Озвучивание включено.':'Озвучивание выключено.');});
+  $('#restartBtn').addEventListener('click',()=>{$('#modalTitle').textContent='Начать сначала?';$('#modalText').textContent='Текущий прогресс на острове будет сброшен, а все локации снова закроются. Действие нельзя отменить.';$('#modalBackdrop').classList.add('show');$('#modalClose').textContent='Отмена';const old=$('#modalReset');if(old)old.remove();const b=document.createElement('button');b.id='modalReset';b.type='button';b.className='small-btn primary';b.textContent='Сбросить прогресс';b.addEventListener('click',()=>{progress={unlocked:0,completed:[],gems:0};saveProgress();renderMap();switchScreen('mapScreen');$('#modalBackdrop').classList.remove('show');$('#modalClose').textContent='Понятно';b.remove();toast('Прогресс сброшен. Можно начинать заново.');});$('.modal-actions').appendChild(b);});
+  $('#howBtn').addEventListener('click',()=>{$('#modalTitle').textContent='Как играть?';$('#modalText').textContent='Проходи локации по порядку. В заданиях на сортировку нажми карточку, а затем кнопку нужного корабля или сундука внизу экрана (на компьютере также можно перетаскивать карточки). В остальных заданиях выбирай ответ на экране. Кнопка с динамиком повторяет слово или инструкцию. За пройденный этап начисляются кристаллы. Ошибки не отнимают награды — можно попробовать ещё раз.';$('#modalClose').textContent='Понятно';const r=$('#modalReset');if(r)r.remove();$('#modalBackdrop').classList.add('show');});
+  $('#modalClose').addEventListener('click',()=>{$('#modalBackdrop').classList.remove('show');const r=$('#modalReset');if(r)r.remove();$('#modalClose').textContent='Понятно';});
+  $('#modalBackdrop').addEventListener('click',e=>{if(e.target===$('#modalBackdrop')){$('#modalBackdrop').classList.remove('show');const r=$('#modalReset');if(r)r.remove();$('#modalClose').textContent='Понятно';}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#modalBackdrop').classList.remove('show');const r=$('#modalReset');if(r)r.remove();$('#modalClose').textContent='Понятно';}});
+
+  // Compatibility fallback for older mobile browsers / embedded webviews:
+  // if a tap ends on a control but the browser fails to synthesize click, replay it once.
+  if ('ontouchend' in window) {
+    document.addEventListener('touchend', function(event) {
+      const origin = event.target && (event.target.closest ? event.target : event.target.parentElement);
+      const control = origin && origin.closest ? origin.closest('button,[role="button"]') : null;
+      if (!control || control.disabled) return;
+      let nativeClickSeen = false;
+      const noteClick = function(clickEvent) {
+        const clickOrigin = clickEvent.target && (clickEvent.target.closest ? clickEvent.target : clickEvent.target.parentElement);
+        if (clickOrigin && clickOrigin.closest && clickOrigin.closest('button,[role="button"]') === control) nativeClickSeen = true;
+      };
+      document.addEventListener('click', noteClick, true);
+      window.setTimeout(function() {
+        document.removeEventListener('click', noteClick, true);
+        if (!nativeClickSeen && document.documentElement.contains(control) && !control.disabled) {
+          try { control.click(); } catch (e) { const box=$('#scriptErrorNotice'); if(box){box.hidden=false;} }
+        }
+      }, 120);
+    }, {passive:true});
+  }
+
+  loadProgress();renderMap();
+})();
+</script>
+</body>
+</html>
